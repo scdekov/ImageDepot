@@ -14,16 +14,14 @@ module Depot
     save_images(external_links, width, height, dir_name, dir_path)
   end
 
-  def get_img_path(term)
-    term, ix = term.split(FILENAME_SEPARATOR) # TODO: validate
-    path = IMAGES_DIR.join(term, "#{ix}.png").to_s
+  def get_img_path(term, identifier)
+    path = IMAGES_DIR.join(term, "#{identifier}.png").to_s
     File.exist?(path) ? path : nil
   end
 
   private
 
   IMAGES_DIR = Rails.root.join('storage', 'images')
-  FILENAME_SEPARATOR = '-'.freeze
   GOOGLE_SEARCH_URL = 'https://www.googleapis.com/customsearch/v1'.freeze
   GOOGLE_CX = Rails.application.credentials[:GOOGLE_CX]
   GOOGLE_API_KEY = Rails.application.credentials[:GOOGLE_API_KEY]
@@ -58,7 +56,7 @@ module Depot
     Dir.entries(dir_path)
        .reject { |f| File.directory? f }
        .map do |file|
-         "#{Rails.configuration.host}/api/links/#{dir_name}#{FILENAME_SEPARATOR}#{file}"
+         "#{Rails.configuration.host}/api/links/#{dir_name}/#{file}"
        end
   end
 
