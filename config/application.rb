@@ -13,6 +13,8 @@ require "action_cable/engine"
 # require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
+require 'aws-sdk'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -32,5 +34,11 @@ module ImageDepot
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.host = ENV['RAILS_HOST'] || 'localhost:3000'
+
+    Aws.config.update({
+      region: 'eu-central-1',
+      credentials: Aws::Credentials.new(Rails.application.credentials.AWS_ACCESS_KEY_ID,
+                                        Rails.application.credentials.AWS_SECRET_ACCESS_KEY)
+    })
   end
 end
