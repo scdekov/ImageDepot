@@ -58,8 +58,7 @@ module Depot
     Dir.entries(dir_path)
        .reject { |f| File.directory? f }
        .map do |file|
-         # TODO: add hostname in constant and use it here before deploy
-         "http://localhost:3000/api/links/#{dir_name}#{FILENAME_SEPARATOR}#{file}"
+         "#{Rails.configuration.host}/api/links/#{dir_name}#{FILENAME_SEPARATOR}#{file}"
        end
   end
 
@@ -70,6 +69,6 @@ module Depot
   end
 
   def serialize_term(term)
-    term
+    CGI.escape(term.downcase)
   end
 end
