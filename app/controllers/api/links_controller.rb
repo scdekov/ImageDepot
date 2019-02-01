@@ -8,15 +8,16 @@ module Api
     before_action :authorize, except: [:show]
 
     def show
-      img = Depot.new().get_img(params[:term], params[:identifier])
+      img = Depot.new(params[:term]).get_img(params[:identifier])
       !img.nil? ? send_data(img, filename: "#{params[:identifier]}.png") : render(status: 404)
     end
 
     def create
-      render json: { links: Depot.new().get_links(create_link_params[:term],
-                                                  create_link_params[:count] || 5,
-                                                  create_link_params[:width] || 200,
-                                                  create_link_params[:height] || 200) }
+      depot = Depot.new(create_link_params[:term])
+      render json: { spelling_correction: depot.spelling_correction,
+                     links: depot.get_links(create_link_params[:count] || 5,
+                                            create_link_params[:width] || 200,
+                                            create_link_params[:height] || 200) }
     end
 
     private
