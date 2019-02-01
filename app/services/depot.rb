@@ -55,7 +55,7 @@ class Depot
   end
 
   def build_links
-    s3_bucket.objects(prefix: serialized_term).map do |obj|
+    s3_bucket.objects(prefix: serialized_term + '/').map do |obj|
       "#{Rails.configuration.host}/api/links/#{obj.key}"
     end
   end
@@ -63,7 +63,7 @@ class Depot
   def images_exists
     # this can be improved to check if the number of existing images is enough
     # and probably if the size is the same as requested
-    s3_bucket.objects(prefix: serialized_term).count.positive?
+    s3_bucket.objects(prefix: serialized_term + '/').count.positive?
   end
 
   def serialized_term
