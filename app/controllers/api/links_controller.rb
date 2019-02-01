@@ -9,7 +9,11 @@ module Api
 
     def show
       img = Depot.new(params[:term]).get_img(params[:identifier])
-      !img.nil? ? send_data(img, filename: "#{params[:identifier]}.png") : render(status: 404)
+
+      render(status: 404) if img.nil?
+
+      expires_in 1.year, public: true
+      send_data(img, filename: "#{params[:identifier]}.png")
     end
 
     def create
